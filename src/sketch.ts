@@ -1,4 +1,4 @@
-/// reference
+/// <reference path="../node_modules/@types/p5/global.d.ts" />
 
 const size = 650;
 let myGrid: Grid;
