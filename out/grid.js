@@ -16,7 +16,7 @@ class Square {
         if (this.color === "blue")
             fill(0, 150, 200);
         else
-            fill(27, 27, 27);
+            fill(60, 60, 60);
         rect(this.coords.x * this.scale, this.coords.y * this.scale, this.scale, this.scale);
     }
 }

@@ -1,6 +1,6 @@
 "use strict";
 /// <reference path="../node_modules/@types/p5/global.d.ts" />
-const size = 650;
+const size = 900;
 let myGrid;
 let opponentGrid;
 function setup() {
