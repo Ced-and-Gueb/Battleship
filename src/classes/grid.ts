@@ -3,11 +3,27 @@ class Square {
   coords: { x: number; y: number };
   color: string;
   gridCoordinates: { column: column; row: row };
-  constructor(scale: number, x: number, y: number, color: string) {
+  squaresGrid: Grid;
+  isPin: boolean;
+  coordsWithTranslate: { x: number; y: number };
+  constructor(
+    scale: number,
+    x: number,
+    y: number,
+    color: string,
+    squaresGrid: Grid
+  ) {
     this.scale = scale;
 
     this.coords = { x, y };
     this.color = color;
+
+    this.squaresGrid = squaresGrid;
+    this.coordsWithTranslate = {
+      x: this.coords.x * this.scale + this.squaresGrid.translate.x,
+      y: this.coords.y * this.scale + this.squaresGrid.translate.y,
+    };
+    this.isPin = false;
 
     this.gridCoordinates = this.translateToGridCoords();
   }
@@ -41,13 +57,52 @@ class Square {
       this.scale,
       this.scale
     );
+
+    if (this.isPin) {
+      push();
+      fill(255, 0, 0);
+      ellipseMode(CORNER);
+      ellipse(
+        this.coords.x * this.scale,
+        this.coords.y * this.scale,
+        this.scale
+      );
+      pop();
+    }
+  }
+
+  hitbox(mX: number, mY: number) {
+    return (
+      mX > this.coords.x * this.scale &&
+      mX < this.coords.x * this.scale + this.scale &&
+      mY > this.coords.y * this.scale &&
+      mY < this.coords.y * this.scale + this.scale
+    );
+  }
+
+  pin() {
+    if (this.squaresGrid.whichIsIt !== "mine" && this.isPin) return;
+
+    this.isPin = true;
+
+    // SEND TO SERVER:
+    // this.gridCoordinates
+  }
+
+  clicked(mX: number, mY: number) {
+    const hb = this.hitbox(mX, mY);
+
+    if (hb) {
+      this.pin();
+    }
   }
 }
 
 class Grid {
   grid: Array<Array<Square>>;
-  whichIsIt: string;
-  constructor(whichIsIt: string) {
+  whichIsIt: "mine" | "opponent";
+  translate: { x: number; y: number };
+  constructor(whichIsIt: "mine" | "opponent") {
     this.grid = new Array(10);
     this.whichIsIt = whichIsIt;
 
@@ -59,12 +114,17 @@ class Grid {
 
     let color: string;
 
-    if (this.whichIsIt === "mine") color = "blue";
-    else color = "grey";
+    if (this.whichIsIt === "mine") {
+      color = "blue";
+      this.translate = { x: 0, y: height / 2 };
+    } else {
+      color = "grey";
+      this.translate = { x: 0, y: 0 };
+    }
 
     for (let x = 0; x < 10; x++) {
       for (let y = 0; y < 10; y++) {
-        this.grid[x][y] = new Square(scale, x, y, color);
+        this.grid[x][y] = new Square(scale, x, y, color, this);
         console.log(x, y);
       }
     }
@@ -73,8 +133,10 @@ class Grid {
   show() {
     push();
 
-    if (this.whichIsIt === "mine") translate(width / 4, height / 2);
-    else translate(width / 4, 0);
+    // if (this.whichIsIt === "mine") translate(width / 4, height / 2);
+    // else translate(width / 4, 0);
+
+    translate(this.translate.x, this.translate.y);
 
     for (let i = 0; i < this.grid.length; i++) {
       for (let j = 0; j < this.grid[i].length; j++) {

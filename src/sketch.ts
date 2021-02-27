@@ -15,3 +15,15 @@ function draw() {
   myGrid.show();
   opponentGrid.show();
 }
+
+function mousePressed() {
+  opponentGrid.grid.forEach((column) => {
+    column.forEach((sq) => {
+      sq.clicked(mouseX, mouseY);
+    });
+  });
+}
+
+// function windowResized() {
+//   resizeCanvas(windowWidth, windowHeight);
+// }

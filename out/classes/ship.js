@@ -12,7 +12,7 @@ class Ship {
         // These values are just there to initialize, they will be changed once the ship is positioned on the grid.
         this.gridCoordinates = { column: "-1", row: -1 };
         this.orientation = "VERTICAL";
-        this.size = 0; // Min: 2; Max: 5
+        this.size = 2; // Min: 2; Max: 5
         // This value will be changed once the ship is set on the grid.
         this.isSet = false;
     }
