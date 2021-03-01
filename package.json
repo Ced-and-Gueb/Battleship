@@ -6,6 +6,8 @@
   "author": "Smoqu <36056008+Smoqu@users.noreply.github.com>",
   "license": "MIT",
   "dependencies": {
-    "@types/p5": "^0.9.1"
+    "@types/p5": "^0.9.1",
+    "express": "^4.17.1",
+    "socket.io": "^3.1.2"
   }
 }
