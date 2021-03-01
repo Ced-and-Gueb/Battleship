@@ -55,6 +55,7 @@ class Square {
         this.isPin = true;
         // SEND TO SERVER:
         // this.gridCoordinates
+        socket.emit("pin", this.gridCoordinates);
     }
     clicked(mX, mY) {
         const hb = this.hitbox(mX, mY);

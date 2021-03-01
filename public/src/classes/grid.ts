@@ -87,6 +87,7 @@ class Square {
 
     // SEND TO SERVER:
     // this.gridCoordinates
+    socket.emit("pin", this.gridCoordinates);
   }
 
   clicked(mX: number, mY: number) {

@@ -1,16 +1,22 @@
-const express = require("express")
-const app = express()
-const server = require("http").createServer(app)
-const io = require("socket.io")(server)
+const express = require("express");
+const http = require("http");
+const app = express();
+const socketio = require("socket.io");
 
-app.use(express.static(__dirname + '/public'))
+const server = http.createServer(app);
 
-io.on("connection", (socket) => {
-    socket.on("pos", (pos) => {
-        console.log(pos);
-    })
-})
+const io = socketio(server);
 
-server.listen(3000, () => {
-    console.log("server listen on PORT: 3000");
-})
+app.use(express.static(__dirname + "/public"));
+
+io.sockets.on("connection", (socket) => {
+  console.log(socket.id);
+  socket.on("pin", (pos) => {
+    console.log(pos);
+  });
+});
+
+const PORT = 3000;
+server.listen(PORT, () => {
+  console.log("server listen on PORT:" + PORT);
+});
