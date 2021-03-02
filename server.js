@@ -9,10 +9,13 @@ const io = socketio(server);
 
 app.use(express.static(__dirname + "/public"));
 
-io.sockets.on("connection", (socket) => {
-  console.log(socket.id);
-  socket.on("pin", (pos) => {
-    console.log(pos);
+const state = {};
+const clientRooms = {};
+
+io.sockets.on("connection", (client) => {
+  // When the "pinning" is triggered from the client, sends to the other clients
+  client.on("pinning", (pinnedCoords) => {
+    client.broadcast.emit("pinned", pinnedCoords);
   });
 });
 
