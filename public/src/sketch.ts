@@ -11,6 +11,10 @@ let destroyer: Destroyer;
 let submarine: Submarine;
 let patrolBoat: PatrolBoat;
 
+let shipClickedOn: Ship | null = null;
+
+let ships: Ship[] = [];
+
 function setup() {
   createCanvas(size, size);
   myGrid = new Grid("mine");
@@ -25,6 +29,12 @@ function setup() {
   destroyer = new Destroyer();
   submarine = new Submarine();
   patrolBoat = new PatrolBoat();
+
+  ships.push(carrier);
+  ships.push(battleship);
+  ships.push(destroyer);
+  ships.push(submarine);
+  ships.push(patrolBoat);
 
   // I think all the events received from the server should go in setup.
 
@@ -51,11 +61,7 @@ function draw() {
   background(220);
   myGrid.show();
   opponentGrid.show();
-  carrier.show();
-  battleship.show();
-  destroyer.show();
-  submarine.show();
-  patrolBoat.show();
+  for (let ship of ships) ship.show();
 }
 
 function mousePressed() {
@@ -64,4 +70,30 @@ function mousePressed() {
       sq.clicked(mouseX, mouseY);
     });
   });
+
+  for (let ship of ships) {
+    ship.clicked(mouseX, mouseY);
+  }
+}
+
+function mouseDragged() {
+  for (let ship of ships) ship.drag(mouseX, mouseY);
+}
+
+function mouseReleased() {
+  if (shipClickedOn !== null) shipClickedOn = null;
+}
+
+function mouseWheel(event: any) {
+  if (shipClickedOn !== null) shipClickedOn.changeOrientation();
+}
+
+function keyPressed() {
+  switch (keyCode) {
+    case 79:
+      if (shipClickedOn !== null) shipClickedOn.changeOrientation();
+      break;
+    default:
+      return;
+  }
 }

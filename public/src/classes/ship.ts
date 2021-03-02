@@ -4,7 +4,8 @@ class Ship {
   orientation: "VERTICAL" | "HORIZONTAL";
   size: number;
   isSet: boolean;
-  initialPosition: { x: number; y: number };
+  position: { x: number; y: number };
+  scale: number;
 
   constructor(
     type: "carrier" | "battleship" | "destroyer" | "submarine" | "patrolBoat",
@@ -19,7 +20,7 @@ class Ship {
 
     this.type = type;
 
-    this.initialPosition = initialPosition;
+    this.position = initialPosition;
 
     // Coordinates always refer to the "head" of the ship, the whole "body" is calculated depending on its orientation and its size.
     // These values are just there to initialize, they will be changed once the ship is positioned on the grid.
@@ -29,6 +30,8 @@ class Ship {
 
     // This value will be changed once the ship is set on the grid.
     this.isSet = false;
+
+    this.scale = size / (10 * 2);
   }
 
   translateGridCoordinates() {
@@ -36,25 +39,63 @@ class Ship {
   }
 
   show() {
-    const scale = size / (10 * 2);
-
     push();
     fill(255, 0, 0);
     if (this.orientation === "VERTICAL") {
       rect(
-        this.initialPosition.x,
-        this.initialPosition.y,
-        scale,
-        this.size * scale
+        this.position.x,
+        this.position.y,
+        this.scale,
+        this.size * this.scale
       );
     } else
       rect(
-        this.initialPosition.x,
-        this.initialPosition.y,
-        this.size * scale,
-        scale
+        this.position.x,
+        this.position.y,
+        this.size * this.scale,
+        this.scale
       );
     pop();
+  }
+
+  // Hitbox of the ship
+  hitbox(mX: number, mY: number) {
+    if (this.orientation === "VERTICAL") {
+      return (
+        mX > this.position.x &&
+        mX < this.position.x + this.scale &&
+        mY > this.position.y &&
+        mY < this.position.y + this.size * this.scale
+      );
+    } else {
+      return (
+        mX > this.position.x &&
+        mX < this.position.x + this.scale * this.size &&
+        mY > this.position.y &&
+        mY < this.position.y + this.scale
+      );
+    }
+  }
+
+  changeOrientation() {
+    this.orientation =
+      this.orientation === "HORIZONTAL" ? "VERTICAL" : "HORIZONTAL";
+  }
+
+  changePosition(mX: number, mY: number) {
+    [this.position.x, this.position.y] = [mX, mY];
+  }
+
+  clicked(mX: number, mY: number) {
+    const hb = this.hitbox(mX, mY);
+
+    if (hb) shipClickedOn = this;
+  }
+
+  drag(mX: number, mY: number) {
+    if (shipClickedOn === this) {
+      this.changePosition(mX, mY);
+    }
   }
 }
 
