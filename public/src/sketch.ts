@@ -5,6 +5,11 @@ const size = 900;
 let myGrid: Grid;
 let opponentGrid: Grid;
 let socket;
+let carrier: Carrier;
+let battleship: Battleship;
+let destroyer: Destroyer;
+let submarine: Submarine;
+let patrolBoat: PatrolBoat;
 
 function setup() {
   createCanvas(size, size);
@@ -14,6 +19,12 @@ function setup() {
   // For this to work you have to be on your browser on http://localhost:3000
   // There is an issue, that's just because TypeScript can't find the types, but that's ok it exists
   socket = io.connect("http://localhost:3000");
+
+  carrier = new Carrier();
+  battleship = new Battleship();
+  destroyer = new Destroyer();
+  submarine = new Submarine();
+  patrolBoat = new PatrolBoat();
 
   // I think all the events received from the server should go in setup.
 
@@ -40,6 +51,11 @@ function draw() {
   background(220);
   myGrid.show();
   opponentGrid.show();
+  carrier.show();
+  battleship.show();
+  destroyer.show();
+  submarine.show();
+  patrolBoat.show();
 }
 
 function mousePressed() {
